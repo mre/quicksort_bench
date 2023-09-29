@@ -12,6 +12,7 @@ The following results were obtained on a 2021 MacBook Pro M1 and 32 GB of RAM.
 |---------------------|----------|
 | mutable             | 0.25     |
 | immutable           | 0.35     |
+| partition immutable | 0.34     |
 | parallel immutable  | 19.06    |
 
 As you can see, the immutable implementation is about 40% slower than the
