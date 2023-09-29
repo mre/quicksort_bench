@@ -19,5 +19,9 @@ name = "quicksort"
 harness = false
 
 [[bench]]
+name = "quicksort_partition"
+harness = false
+
+[[bench]]
 name = "quicksort_par"
 harness = false

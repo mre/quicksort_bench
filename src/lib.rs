@@ -40,6 +40,18 @@ pub fn quicksort<T: Ord + Clone>(array: &[T]) -> Vec<T> {
     [quicksort(&lower), vec![pivot.clone()], quicksort(&higher)].concat()
 }
 
+/// Immutable quicksort implementation with partition
+pub fn quicksort_partition<T: Ord + Clone>(array: &[T]) -> Vec<T> {
+    if array.len() <= 1 {
+        return array.to_vec();
+    }
+
+    let pivot = &array[0];
+    let (higher, lower): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x > pivot);
+
+    [quicksort(&lower), vec![pivot.clone()], quicksort(&higher)].concat()
+}
+
 /// Uses rayon to parallelize the quicksort algorithm
 pub fn quicksort_par<T: Ord + Clone + Sync + Send>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {
@@ -124,6 +136,16 @@ mod tests {
 
         for test in tests {
             let result = quicksort(&test);
+            assert!(is_sorted(&result));
+        }
+    }
+
+    #[test]
+    fn test_quicksort_partition() {
+        let tests = get_test_vecs();
+
+        for test in tests {
+            let result = quicksort_partition(&test);
             assert!(is_sorted(&result));
         }
     }
