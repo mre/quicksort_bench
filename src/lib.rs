@@ -1,30 +1,31 @@
 use rayon::prelude::*;
 
 /// Mutable, in-place quicksort implementation
-pub fn quicksort_mut<T: PartialOrd>(mut arr: Vec<T>) -> Vec<T> {
+pub fn quicksort_mut<T: PartialOrd + Clone>(arr: &mut [T]) {
     if arr.len() <= 1 {
-        return arr;
+        return;
     }
 
-    let pivot = arr.remove(0);
-    let mut left = vec![];
-    let mut right = vec![];
+    let pivot_index = partition(arr);
+    quicksort_mut(&mut arr[0..pivot_index]);
+    quicksort_mut(&mut arr[pivot_index + 1..]);
+}
 
-    for item in arr {
-        if item <= pivot {
-            left.push(item);
-        } else {
-            right.push(item);
+fn partition<T: PartialOrd + Clone>(arr: &mut [T]) -> usize {
+    let pivot = arr[0].clone();
+    let mut i = 1;
+    let mut j = 1;
+
+    while j < arr.len() {
+        if arr[j] <= pivot {
+            arr.swap(i, j);
+            i += 1;
         }
+        j += 1;
     }
 
-    let mut sorted_left = quicksort_mut(left);
-    let mut sorted_right = quicksort_mut(right);
-
-    sorted_left.push(pivot);
-    sorted_left.append(&mut sorted_right);
-
-    sorted_left
+    arr.swap(0, i - 1);
+    i - 1
 }
 
 /// pdqsort implementation in the standard library (unstable)
@@ -170,9 +171,9 @@ mod tests {
     fn test_quicksort_mut() {
         let tests = get_test_vecs();
 
-        for test in tests {
-            let result = quicksort_mut(test);
-            assert!(is_sorted(&result));
+        for mut test in tests {
+            quicksort_mut(&mut test);
+            assert!(is_sorted(&test));
         }
     }
 
