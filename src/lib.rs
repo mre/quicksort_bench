@@ -27,6 +27,15 @@ pub fn quicksort_mut<T: PartialOrd>(mut arr: Vec<T>) -> Vec<T> {
     sorted_left
 }
 
+/// pdqsort implementation in the standard library (unstable)
+/// This serves as a lower bound for the performance of the other implementations
+pub fn quicksort_stdlib<T: Ord + Clone>(array: &[T]) -> Vec<T> {
+    let mut sorted = array.to_vec();
+    // Simply use the standard library's unstable sort
+    sorted.sort_unstable();
+    sorted
+}
+
 /// Immutable quicksort implementation
 pub fn quicksort<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {

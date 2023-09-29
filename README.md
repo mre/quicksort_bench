@@ -8,12 +8,13 @@ in a real-world scenario.
 
 The following results were obtained on a 2021 MacBook Pro M1 and 32 GB of RAM.
 
-| Implementation      | Time (s) |
-|---------------------|----------|
-| mutable             | 0.25     |
-| immutable           | 0.35     |
-| partition immutable | 0.34     |
-| parallel immutable  | 19.06    |
+| Implementation       | Time (s) |
+|----------------------|----------|
+| slice::sort_unstable | 0.02     |
+| mutable              | 0.25     |
+| immutable            | 0.35     |
+| partition immutable  | 0.34     |
+| parallel immutable   | 19.06    |
 
 As you can see, the immutable implementation is about 40% slower than the
 mutable one. The parallel immutable implementation is about 76 times slower than

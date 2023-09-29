@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use quicksort_bench::quicksort_partition;
+use quicksort_bench::quicksort_stdlib;
 
 fn quick_sort_benchmark(c: &mut Criterion) {
     // Create a very large, 1 million element vector with random values
@@ -9,9 +9,7 @@ fn quick_sort_benchmark(c: &mut Criterion) {
     println!("arr.len() = {}", arr.len());
     println!("arr[0..10] = {:?}", &arr[0..10]);
 
-    c.bench_function("quick_sort_partition", |b| {
-        b.iter(|| quicksort_partition(&arr))
-    });
+    c.bench_function("quick_sort_stdlib", |b| b.iter(|| quicksort_stdlib(&arr)));
 }
 
 criterion_group!(benches, quick_sort_benchmark);

@@ -15,6 +15,10 @@ name = "quicksort_mut"
 harness = false
 
 [[bench]]
+name = "quicksort_stdlib"
+harness = false
+
+[[bench]]
 name = "quicksort"
 harness = false
 
