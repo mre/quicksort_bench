@@ -1,7 +1,7 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use quicksort_bench::quicksort_stdlib;
 
-fn quick_sort_benchmark(c: &mut Criterion) {
+fn quicksort_benchmark(c: &mut Criterion) {
     // Create a very large, 1 million element vector with random values
     let arr = (0..1_000_000)
         .map(|_| rand::random::<u32>())
@@ -9,8 +9,8 @@ fn quick_sort_benchmark(c: &mut Criterion) {
     println!("arr.len() = {}", arr.len());
     println!("arr[0..10] = {:?}", &arr[0..10]);
 
-    c.bench_function("quick_sort_stdlib", |b| b.iter(|| quicksort_stdlib(&arr)));
+    c.bench_function("quicksort_stdlib", |b| b.iter(|| quicksort_stdlib(&arr)));
 }
 
-criterion_group!(benches, quick_sort_benchmark);
+criterion_group!(benches, quicksort_benchmark);
 criterion_main!(benches);
