@@ -1,4 +1,4 @@
-use quicksort_bench::quicksort;
+use quicksort_bench::quicksort_partition;
 
 fn main() {
     // Create a very large, 1 million element vector with random values
@@ -8,5 +8,5 @@ fn main() {
     println!("arr.len() = {}", arr.len());
     println!("arr[0..10] = {:?}", &arr[0..10]);
 
-    quicksort(&arr);
+    quicksort_partition(&arr);
 }

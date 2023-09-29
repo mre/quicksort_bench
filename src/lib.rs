@@ -49,8 +49,8 @@ pub fn quicksort<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
     [quicksort(&lower), vec![pivot.clone()], quicksort(&higher)].concat()
 }
 
-/// Immutable quicksort implementation with partition
-pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
+/// Immutable quicksort implementation with partition, version 1
+pub fn quicksort_partition_v1<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {
         return array.to_vec();
     }
@@ -59,13 +59,45 @@ pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
     let (higher, lower): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x > pivot);
 
     [
-        quicksort_partition(&lower),
+        quicksort_partition_v1(&lower),
         vec![pivot.clone()],
-        quicksort_partition(&higher),
+        quicksort_partition_v1(&higher),
     ]
     .concat()
 }
 
+/// Immutable quicksort implementation with partition
+pub fn quicksort_partition_v2<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
+    if array.len() <= 1 {
+        return array.to_vec();
+    }
+
+    let pivot = &array[0];
+    let (higher, lower): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x > pivot);
+
+    quicksort_partition_v2(&lower)
+        .iter()
+        .cloned()
+        .chain(std::iter::once(pivot.clone()))
+        .chain(quicksort_partition_v2(&higher).iter().cloned())
+        .collect()
+}
+
+/// Immutable quicksort implementation with partition
+pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
+    if array.len() <= 1 {
+        return array.to_vec();
+    }
+
+    let pivot = array[0].clone();
+    let (lower, higher): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x <= &pivot);
+
+    quicksort_partition(&lower)
+        .into_iter()
+        .chain(std::iter::once(pivot))
+        .chain(quicksort_partition(&higher).into_iter())
+        .collect()
+}
 /// Uses rayon to parallelize the quicksort algorithm
 pub fn quicksort_par<T: PartialOrd + Clone + Sync + Send>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {
