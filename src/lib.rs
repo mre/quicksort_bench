@@ -1,3 +1,4 @@
+use rand::Rng;
 use rayon::prelude::*;
 
 /// Mutable, in-place quicksort implementation
@@ -11,7 +12,33 @@ pub fn quicksort_mut<T: PartialOrd + Clone>(arr: &mut [T]) {
     quicksort_mut(&mut arr[pivot_index + 1..]);
 }
 
+/// This is a version of the partition function that uses the first value as the pivot,
+/// which is not optimal, because it is very easy to construct an array that will cause this
+/// implementation to run in O(n^2) time
+/// However, it is a good example of why it is important to choose a good pivot
+/// and therefore is included for completeness' sake
+#[allow(dead_code)]
+fn partition_first_value_pivot<T: PartialOrd + Clone>(arr: &mut [T]) -> usize {
+    let pivot = arr[0].clone();
+    let mut i = 1;
+    let mut j = 1;
+
+    while j < arr.len() {
+        if arr[j] <= pivot {
+            arr.swap(i, j);
+            i += 1;
+        }
+        j += 1;
+    }
+
+    arr.swap(0, i - 1);
+    i - 1
+}
+
 fn partition<T: PartialOrd + Clone>(arr: &mut [T]) -> usize {
+    let pivot_index = rand::thread_rng().gen_range(0..arr.len());
+    arr.swap(0, pivot_index); // Move the chosen pivot to the beginning
+
     let pivot = arr[0].clone();
     let mut i = 1;
     let mut j = 1;
