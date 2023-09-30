@@ -8,13 +8,14 @@ in a real-world scenario.
 
 The following results were obtained on a 2021 MacBook Pro M1 and 32 GB of RAM.
 
-| Implementation       | Time (s) | Notes
-|----------------------|----------|--------
-| slice::sort_unstable | 0.02     | baseline (mutable)
-| mutable              | 0.04     | custom implementation; mutable; optimized with random pivot
-| immutable            | 0.35     | 
-| partition immutable  | 0.34     |
-| parallel immutable   | 19.06    |
+| Implementation                      | Time (s) | Notes                                        |
+|-------------------------------------|----------|----------------------------------------------|
+| `slice::sort_unstable`              | 0.02     | baseline (mutable)                           |
+| mutable                             | 0.04     | custom implementation; mutable; random pivot |
+| immutable                           | 0.35     |                                              |
+| partition immutable                 | 0.34     |                                              |
+| partition immutable (random pivot)  | 0.293    |                                              |
+| parallel immutable                  | 19.06    |                                              |
 
 As you can see, the immutable implementation is about 40% slower than the
 mutable one. The parallel immutable implementation is about 76 times slower than
