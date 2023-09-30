@@ -112,12 +112,31 @@ pub fn quicksort_partition_v2<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
 }
 
 /// Immutable quicksort implementation with partition
-pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
+pub fn quicksort_partition_v3<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {
         return array.to_vec();
     }
 
     let pivot = array[0].clone();
+    let (lower, higher): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x <= &pivot);
+
+    quicksort_partition_v3(&lower)
+        .into_iter()
+        .chain(std::iter::once(pivot))
+        .chain(quicksort_partition_v3(&higher).into_iter())
+        .collect()
+}
+
+use rand::seq::SliceRandom;
+
+/// Immutable quicksort implementation with partition
+pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
+    if array.len() <= 1 {
+        return array.to_vec();
+    }
+
+    // Safety: array is guaranteed to not be empty
+    let pivot = array.choose(&mut rand::thread_rng()).unwrap().clone();
     let (lower, higher): (Vec<_>, Vec<_>) = array[1..].iter().cloned().partition(|x| x <= &pivot);
 
     quicksort_partition(&lower)
@@ -126,6 +145,7 @@ pub fn quicksort_partition<T: PartialOrd + Clone>(array: &[T]) -> Vec<T> {
         .chain(quicksort_partition(&higher).into_iter())
         .collect()
 }
+
 /// Uses rayon to parallelize the quicksort algorithm
 pub fn quicksort_par<T: PartialOrd + Clone + Sync + Send>(array: &[T]) -> Vec<T> {
     if array.len() <= 1 {
