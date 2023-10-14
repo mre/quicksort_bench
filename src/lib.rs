@@ -172,6 +172,32 @@ pub fn quicksort_par<T: PartialOrd + Clone + Sync + Send>(array: &[T]) -> Vec<T>
     .concat()
 }
 
+/// Uses rayon to parallelize the quicksort algorithm
+pub fn quicksort_par_im<T: PartialOrd + Clone + Sync + Send>(array: &[T]) -> im::Vector<T> {
+    if array.len() <= 1 {
+        return array.into();
+    }
+
+    let pivot = &array[0];
+    let higher: Vec<T> = array[1..]
+        .par_iter()
+        .filter(|x| x > &pivot)
+        .cloned()
+        .collect();
+    let lower: Vec<T> = array[1..]
+        .par_iter()
+        .filter(|x| x <= &pivot)
+        .cloned()
+        .collect();
+
+    let mut v = im::Vector::new();
+    v.append(quicksort_par_im(&lower));
+    v.push_back(pivot.clone());
+    v.append(quicksort_par_im(&higher));
+
+    v
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -250,6 +276,16 @@ mod tests {
 
         for test in tests {
             let result = quicksort_par(&test);
+            assert!(is_sorted(&result));
+        }
+    }
+    #[test]
+    fn test_quicksort_par_im() {
+        let tests = get_test_vecs();
+
+        for test in tests {
+            let result = quicksort_par_im(&test);
+            let result: Vec<_> = result.into_iter().collect();
             assert!(is_sorted(&result));
         }
     }
